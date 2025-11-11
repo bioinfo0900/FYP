@@ -3,7 +3,8 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useGraveyard } from '@/contexts/GraveyardContext';
 import { useFinance } from '@/contexts/FinanceContext';
-import { Map, Grid3x3, Boxes, CheckCircle2, XCircle, DollarSign, Clock } from 'lucide-react';
+import { useMaintenance } from '@/contexts/MaintenanceContext';
+import { Map, Grid3x3, Boxes, CheckCircle2, XCircle, DollarSign, Clock, Wrench, AlertTriangle } from 'lucide-react';
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -13,6 +14,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { graveyards, plots, graves } = useGraveyard();
   const { getTotalRevenue, getPendingAmount, payments } = useFinance();
+  const { tasks, getScheduledTasks, getOverdueTasks } = useMaintenance();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -95,6 +97,20 @@ export default function Dashboard() {
       gradient: 'from-orange-500 to-orange-600',
       bgGradient: 'from-orange-50 to-orange-100',
     },
+    {
+      title: 'Active Maintenance',
+      value: getScheduledTasks().length,
+      icon: Wrench,
+      gradient: 'from-blue-500 to-blue-600',
+      bgGradient: 'from-blue-50 to-blue-100',
+    },
+    {
+      title: 'Overdue Tasks',
+      value: getOverdueTasks().length,
+      icon: AlertTriangle,
+      gradient: 'from-red-500 to-red-600',
+      bgGradient: 'from-red-50 to-red-100',
+    },
   ];
 
   return (
@@ -162,6 +178,12 @@ export default function Dashboard() {
                 <span className="text-sm text-slate-600">Total Transactions</span>
                 <span className="font-semibold text-slate-900">
                   {payments.length}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Total Maintenance Tasks</span>
+                <span className="font-semibold text-slate-900">
+                  {tasks.length}
                 </span>
               </div>
             </div>

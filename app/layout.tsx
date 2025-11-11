@@ -5,6 +5,7 @@ import { GraveyardProvider } from '@/contexts/GraveyardContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { BurialRecordProvider } from '@/contexts/BurialRecordContext';
 import { FinanceProvider } from '@/contexts/FinanceContext';
+import { MaintenanceProvider } from '@/contexts/MaintenanceContext';
 import Sidebar from '@/components/Sidebar';
 import LayoutContent from '@/components/LayoutContent';
 
@@ -27,9 +28,11 @@ export default function RootLayout({
           <GraveyardProvider>
             <BurialRecordProvider>
               <FinanceProvider>
-                <LayoutContent>
-                  {children}
-                </LayoutContent>
+                <MaintenanceProvider>
+                  <LayoutContent>
+                    {children}
+                  </LayoutContent>
+                </MaintenanceProvider>
               </FinanceProvider>
             </BurialRecordProvider>
           </GraveyardProvider>
