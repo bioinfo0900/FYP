@@ -19,6 +19,8 @@ export interface BurialRecord {
   approvedBy?: string;
   approvedAt?: Date;
   notes?: string;
+  phoneNumber?: string;
+  address?: string;
 }
 
 interface BurialRecordContextType {
@@ -28,6 +30,8 @@ interface BurialRecordContextType {
   deleteRecord: (id: string) => void;
   approveRecord: (id: string, approvedBy: string) => void;
   rejectRecord: (id: string, notes: string) => void;
+  getRecordByGraveId: (graveId: string) => BurialRecord | undefined;
+  checkDuplicateRecord: (name: string, fatherName: string, dateOfDeath: string, excludeId?: string) => boolean;
 }
 
 const BurialRecordContext = createContext<BurialRecordContextType | undefined>(undefined);
@@ -102,6 +106,19 @@ export const BurialRecordProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const getRecordByGraveId = (graveId: string) => {
+    return records.find((record) => record.graveId === graveId && record.status === 'approved');
+  };
+
+  const checkDuplicateRecord = (name: string, fatherName: string, dateOfDeath: string, excludeId?: string) => {
+    return records.some((record) =>
+      record.name.toLowerCase() === name.toLowerCase() &&
+      record.fatherName.toLowerCase() === fatherName.toLowerCase() &&
+      record.dateOfDeath === dateOfDeath &&
+      record.id !== excludeId
+    );
+  };
+
   const value: BurialRecordContextType = {
     records,
     addRecord,
@@ -109,6 +126,8 @@ export const BurialRecordProvider = ({ children }: { children: ReactNode }) => {
     deleteRecord,
     approveRecord,
     rejectRecord,
+    getRecordByGraveId,
+    checkDuplicateRecord,
   };
 
   return (

@@ -1,46 +1,41 @@
 "use client";
 
 import { useState } from 'react';
-import { useBurialRecord } from '@/contexts/BurialRecordContext';
+import { useBurialRecord, BurialRecord } from '@/contexts/BurialRecordContext';
 import { useGraveyard } from '@/contexts/GraveyardContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X } from 'lucide-react';
 
-interface BurialRecordFormProps {
+interface EditBurialRecordFormProps {
+  record: BurialRecord;
   onClose: () => void;
 }
 
-export default function BurialRecordForm({ onClose }: BurialRecordFormProps) {
-  const [name, setName] = useState('');
-  const [fatherName, setFatherName] = useState('');
-  const [dateOfDeath, setDateOfDeath] = useState('');
-  const [gender, setGender] = useState<'male' | 'female'>('male');
-  const [age, setAge] = useState('');
-  const [religion, setReligion] = useState('');
-  const [plotId, setPlotId] = useState('');
-  const [graveId, setGraveId] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [address, setAddress] = useState('');
+export default function EditBurialRecordForm({ record, onClose }: EditBurialRecordFormProps) {
+  const [name, setName] = useState(record.name);
+  const [fatherName, setFatherName] = useState(record.fatherName);
+  const [dateOfDeath, setDateOfDeath] = useState(record.dateOfDeath);
+  const [gender, setGender] = useState<'male' | 'female'>(record.gender);
+  const [age, setAge] = useState(record.age.toString());
+  const [religion, setReligion] = useState(record.religion);
+  const [phoneNumber, setPhoneNumber] = useState(record.phoneNumber || '');
+  const [address, setAddress] = useState(record.address || '');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { addRecord, checkDuplicateRecord } = useBurialRecord();
-  const { plots, graves, updateGrave } = useGraveyard();
+  const { updateRecord, checkDuplicateRecord } = useBurialRecord();
+  const { plots } = useGraveyard();
 
-  const availablePlots = plots.filter((p) => p.totalGraves > 0);
-  const selectedPlot = plots.find((p) => p.id === plotId);
-  const availableGraves = selectedPlot
-    ? graves.filter((g) => g.plotId === plotId && g.status === 'available')
-    : [];
+  const selectedPlot = plots.find((p) => p.id === record.plotId);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!name || !fatherName || !dateOfDeath || !age || !religion || !plotId || !graveId) {
-      setError('All fields are required');
+    if (!name || !fatherName || !dateOfDeath || !age || !religion) {
+      setError('All required fields must be filled');
       return;
     }
 
@@ -49,7 +44,7 @@ export default function BurialRecordForm({ onClose }: BurialRecordFormProps) {
       return;
     }
 
-    if (checkDuplicateRecord(name, fatherName, dateOfDeath)) {
+    if (checkDuplicateRecord(name, fatherName, dateOfDeath, record.id)) {
       setError('A burial record with the same name, father\'s name, and date of death already exists');
       return;
     }
@@ -57,25 +52,20 @@ export default function BurialRecordForm({ onClose }: BurialRecordFormProps) {
     setIsLoading(true);
 
     try {
-      addRecord({
+      updateRecord(record.id, {
         name,
         fatherName,
         dateOfDeath,
         gender,
         age: parseInt(age),
         religion,
-        plotId,
-        graveId,
-        status: 'pending',
         phoneNumber,
         address,
       });
 
-      updateGrave(graveId, { status: 'unavailable', reservedBy: name });
-
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create record');
+      setError(err instanceof Error ? err.message : 'Failed to update record');
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +75,7 @@ export default function BurialRecordForm({ onClose }: BurialRecordFormProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-3xl rounded-2xl bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-slate-200 p-6">
-          <h2 className="text-2xl font-bold text-slate-900">New Burial Record</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Edit Burial Record</h2>
           <button
             onClick={onClose}
             className="rounded-lg p-2 hover:bg-slate-100"
@@ -197,40 +187,16 @@ export default function BurialRecordForm({ onClose }: BurialRecordFormProps) {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Plot <span className="text-red-500">*</span></label>
-              <Select value={plotId} onValueChange={(val) => { setPlotId(val); setGraveId(''); }}>
-                <SelectTrigger className="w-full bg-white">
-                  <SelectValue placeholder="Select plot" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availablePlots.map((plot) => (
-                    <SelectItem key={plot.id} value={plot.id}>
-                      Plot {plot.plotNumber}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Grave <span className="text-red-500">*</span></label>
-              <Select value={graveId} onValueChange={setGraveId} disabled={!plotId}>
-                <SelectTrigger className="w-full bg-white">
-                  <SelectValue placeholder={plotId ? (availableGraves.length > 0 ? "Select available grave" : "No available graves") : "Select plot first"} />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableGraves.length > 0 ? (
-                    availableGraves.map((grave) => (
-                      <SelectItem key={grave.id} value={grave.id}>
-                        Grave {grave.graveNumber}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem value="none" disabled>No available graves in this plot</SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">Assigned Plot/Grave</label>
+              <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                <p className="text-sm text-slate-900">
+                  Plot {selectedPlot?.plotNumber || 'N/A'} - Grave #{record.graveId.split('-').pop()}
+                </p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Plot and grave assignment cannot be changed after creation
+                </p>
+              </div>
             </div>
           </div>
 
@@ -251,10 +217,10 @@ export default function BurialRecordForm({ onClose }: BurialRecordFormProps) {
             </Button>
             <Button
               type="submit"
-              disabled={isLoading || availableGraves.length === 0}
+              disabled={isLoading}
               className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-2 rounded-lg hover:from-cyan-600 hover:to-cyan-700"
             >
-              {isLoading ? 'Creating...' : 'Create Record'}
+              {isLoading ? 'Updating...' : 'Update Record'}
             </Button>
           </div>
         </form>

@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from 'react';
-import { X, User } from 'lucide-react';
+import { X, User, Phone, MapPin, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Grave } from '@/contexts/GraveyardContext';
+import { useBurialRecord } from '@/contexts/BurialRecordContext';
 
 interface GraveModalProps {
   grave: Grave;
@@ -16,6 +17,9 @@ interface GraveModalProps {
 
 export default function GraveModal({ grave, plotNumber, onUpdate, onClose }: GraveModalProps) {
   const [reservedBy, setReservedBy] = useState(grave.reservedBy || '');
+  const { getRecordByGraveId } = useBurialRecord();
+
+  const burialRecord = getRecordByGraveId(grave.id);
 
   const handleReserve = () => {
     if (reservedBy.trim()) {
@@ -69,7 +73,86 @@ export default function GraveModal({ grave, plotNumber, onUpdate, onClose }: Gra
             </div>
           </div>
 
-          {grave.status === 'available' ? (
+          {grave.status === 'unavailable' && burialRecord ? (
+            <div className="space-y-4">
+              <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+                <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Burial Record Information
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2">
+                    <User className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-xs text-blue-700">Name</p>
+                      <p className="font-semibold text-blue-900">{burialRecord.name}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                    <Users className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-xs text-blue-700">Father's Name</p>
+                      <p className="font-semibold text-blue-900">{burialRecord.fatherName}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                    <Calendar className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-xs text-blue-700">Date of Death</p>
+                      <p className="font-semibold text-blue-900">
+                        {new Date(burialRecord.dateOfDeath).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <p className="text-xs text-blue-700">Age</p>
+                      <p className="font-semibold text-blue-900">{burialRecord.age}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-blue-700">Gender</p>
+                      <p className="font-semibold text-blue-900 capitalize">{burialRecord.gender}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-blue-700">Religion</p>
+                    <p className="font-semibold text-blue-900">{burialRecord.religion}</p>
+                  </div>
+
+                  {burialRecord.phoneNumber && (
+                    <div className="flex items-start gap-2">
+                      <Phone className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-xs text-blue-700">Phone Number</p>
+                        <p className="font-semibold text-blue-900">{burialRecord.phoneNumber}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {burialRecord.address && (
+                    <div className="flex items-start gap-2">
+                      <MapPin className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-xs text-blue-700">Address</p>
+                        <p className="font-semibold text-blue-900">{burialRecord.address}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <Button
+                onClick={handleRelease}
+                variant="outline"
+                className="w-full border-green-500 text-green-700 hover:bg-green-50"
+              >
+                Release Grave
+              </Button>
+            </div>
+          ) : grave.status === 'available' ? (
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="reservedBy">Reserve For</Label>
@@ -98,6 +181,9 @@ export default function GraveModal({ grave, plotNumber, onUpdate, onClose }: Gra
                 <div className="rounded-lg bg-red-50 p-4">
                   <p className="text-sm text-slate-600 mb-1">Reserved for</p>
                   <p className="font-semibold text-slate-900">{grave.reservedBy}</p>
+                  <p className="text-xs text-slate-500 mt-2">
+                    No approved burial record found for this grave
+                  </p>
                 </div>
               )}
               <Button

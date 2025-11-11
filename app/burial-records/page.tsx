@@ -4,11 +4,12 @@ import { useState, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBurialRecord } from '@/contexts/BurialRecordContext';
 import { useGraveyard } from '@/contexts/GraveyardContext';
-import { Plus, Search, Filter, Check, X, Eye, Lock } from 'lucide-react';
+import { Plus, Search, Filter, Check, X, Eye, Lock, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import BurialRecordForm from '@/components/BurialRecordForm';
+import EditBurialRecordForm from '@/components/EditBurialRecordForm';
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,7 @@ export default function BurialRecordsPage() {
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectDialog, setShowRejectDialog] = useState(false);
   const [rejectingRecordId, setRejectingRecordId] = useState<string | null>(null);
+  const [editingRecord, setEditingRecord] = useState<typeof records[0] | null>(null);
 
   if (!isAuthenticated) {
     return (
@@ -193,6 +195,16 @@ export default function BurialRecordsPage() {
                             <Eye className="h-4 w-4" />
                           </button>
 
+                          {canApprove && (
+                            <button
+                              onClick={() => setEditingRecord(record)}
+                              className="p-2 rounded-lg hover:bg-blue-100 text-blue-600 hover:text-blue-700"
+                              title="Edit record"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
+                          )}
+
                           {canApprove && record.status === 'pending' && (
                             <>
                               <button
@@ -275,6 +287,18 @@ export default function BurialRecordsPage() {
                     {selectedRecord.status.charAt(0).toUpperCase() + selectedRecord.status.slice(1)}
                   </span>
                 </div>
+                {selectedRecord.phoneNumber && (
+                  <div>
+                    <p className="text-sm text-slate-600">Phone Number</p>
+                    <p className="font-semibold text-slate-900">{selectedRecord.phoneNumber}</p>
+                  </div>
+                )}
+                {selectedRecord.address && (
+                  <div className="md:col-span-2">
+                    <p className="text-sm text-slate-600">Address</p>
+                    <p className="font-semibold text-slate-900">{selectedRecord.address}</p>
+                  </div>
+                )}
               </div>
 
               {selectedRecord.approvedBy && (
@@ -338,6 +362,13 @@ export default function BurialRecordsPage() {
             </div>
           </DialogContent>
         </Dialog>
+      )}
+
+      {editingRecord && (
+        <EditBurialRecordForm
+          record={editingRecord}
+          onClose={() => setEditingRecord(null)}
+        />
       )}
     </div>
   );
