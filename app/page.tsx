@@ -41,9 +41,9 @@ export default function Dashboard() {
   }, [graveyards, plots, graves]);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PK', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'pkr',
     }).format(amount);
   };
 
