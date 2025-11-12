@@ -63,7 +63,7 @@ export default function MaintenanceTaskForm({ onClose, onSuccess }: MaintenanceT
         description,
         category,
         status: 'scheduled',
-        assignedTo: assignedTo || undefined,
+        assignedTo: assignedTo && assignedTo !== 'none' ? assignedTo : undefined,
         assignedBy: user?.id,
         scheduledDate,
         deadline,
