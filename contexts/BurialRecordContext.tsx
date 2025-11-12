@@ -38,36 +38,7 @@ const BurialRecordContext = createContext<BurialRecordContextType | undefined>(u
 
 export const BurialRecordProvider = ({ children }: { children: ReactNode }) => {
   const [records, setRecords] = useState<BurialRecord[]>([
-    {
-      id: '1',
-      name: 'John Smith',
-      fatherName: 'Thomas Smith',
-      dateOfDeath: '2024-10-15',
-      gender: 'male',
-      age: 78,
-      religion: 'Christianity',
-      plotId: '1',
-      graveId: '1',
-      status: 'approved',
-      createdAt: new Date('2024-10-16'),
-      approvedBy: 'admin',
-      approvedAt: new Date('2024-10-16'),
-    },
-    {
-      id: '2',
-      name: 'Mary Johnson',
-      fatherName: 'Robert Johnson',
-      dateOfDeath: '2024-10-20',
-      gender: 'female',
-      age: 65,
-      religion: 'Christianity',
-      plotId: '1',
-      graveId: '2',
-      status: 'approved',
-      createdAt: new Date('2024-10-21'),
-      approvedBy: 'admin',
-      approvedAt: new Date('2024-10-21'),
-    },
+   
   ]);
 
   const addRecord = (record: Omit<BurialRecord, 'id' | 'createdAt'>) => {

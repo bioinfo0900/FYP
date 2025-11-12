@@ -14,9 +14,9 @@ export default function PaymentReceipt({ payment, onClose }: PaymentReceiptProps
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PK', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'PKR',
     }).format(amount);
   };
 
@@ -30,7 +30,7 @@ export default function PaymentReceipt({ payment, onClose }: PaymentReceiptProps
 
   const getServiceTypeName = (type: string) => {
     const types: Record<string, string> = {
-      plot_booking: 'Plot Booking',
+      grave_booking: 'Grave Booking',
       burial_service: 'Burial Service',
       maintenance: 'Maintenance',
       other: 'Other',

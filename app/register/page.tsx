@@ -81,7 +81,7 @@ export default function RegisterPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder="abdullah@gmail.com"
                 required
                 className="w-full"
               />

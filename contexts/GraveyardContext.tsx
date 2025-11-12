@@ -48,15 +48,15 @@ export const GraveyardProvider = ({ children }: { children: ReactNode }) => {
   const [graveyards, setGraveyards] = useState<Graveyard[]>([
     {
       id: '1',
-      name: 'Green Meadows Cemetery',
-      location: '123 Oak Street, Springfield',
+      name: 'H8 Graveyard',
+      location: 'H8 - Islamabad',
       totalPlots: 2,
       createdAt: new Date('2024-01-15'),
     },
     {
       id: '2',
-      name: 'Peaceful Valley Memorial',
-      location: '456 Elm Avenue, Riverside',
+      name: 'H9 Graveyard',
+      location: 'H9 - Islamabad',
       totalPlots: 1,
       createdAt: new Date('2024-02-20'),
     },

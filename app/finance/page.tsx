@@ -31,7 +31,7 @@ export default function FinancePage() {
   const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'paid' | 'pending' | 'overdue'>('all');
-  const [filterServiceType, setFilterServiceType] = useState<'all' | 'plot_booking' | 'burial_service' | 'maintenance' | 'other'>('all');
+  const [filterServiceType, setFilterServiceType] = useState<'all' | 'grave_booking' | 'burial_service' | 'maintenance' | 'other'>('all');
 
   if (!isAuthenticated) {
     return (
@@ -64,9 +64,9 @@ export default function FinancePage() {
   }, [payments, searchQuery, filterStatus, filterServiceType]);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PK', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'PKR',
     }).format(amount);
   };
 
@@ -85,7 +85,7 @@ export default function FinancePage() {
 
   const getServiceTypeName = (type: string) => {
     const types: Record<string, string> = {
-      plot_booking: 'Plot Booking',
+      grave_booking: 'Grave Booking',
       burial_service: 'Burial Service',
       maintenance: 'Maintenance',
       other: 'Other',
@@ -248,7 +248,7 @@ export default function FinancePage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Services</SelectItem>
-              <SelectItem value="plot_booking">Plot Booking</SelectItem>
+              <SelectItem value="grave_booking">Grave Booking</SelectItem>
               <SelectItem value="burial_service">Burial Service</SelectItem>
               <SelectItem value="maintenance">Maintenance</SelectItem>
               <SelectItem value="other">Other</SelectItem>

@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export type PaymentStatus = 'paid' | 'pending' | 'overdue';
-export type ServiceType = 'plot_booking' | 'burial_service' | 'maintenance' | 'other';
+export type ServiceType = 'grave_booking' | 'burial_service' | 'maintenance' | 'other';
 
 export interface Payment {
   id: string;
@@ -59,20 +59,20 @@ export const FinanceProvider = ({ children }: { children: ReactNode }) => {
       const samplePayments: Payment[] = [
         {
           id: '1',
-          customerName: 'John Smith',
+          customerName: 'Musawir Abbass',
           amount: 5000,
           date: '2024-10-15',
           plotInfo: 'Plot A1',
           graveInfo: 'Grave 12',
-          serviceType: 'plot_booking',
+          serviceType: 'grave_booking',
           status: 'paid',
-          description: 'Plot booking for family member',
+          description: 'Grave Booking for family member',
           createdAt: new Date('2024-10-15'),
           updatedAt: new Date('2024-10-15'),
         },
         {
           id: '2',
-          customerName: 'Mary Johnson',
+          customerName: 'Muhammad Bilal',
           amount: 3500,
           date: '2024-11-01',
           dueDate: '2024-11-15',
@@ -86,7 +86,7 @@ export const FinanceProvider = ({ children }: { children: ReactNode }) => {
         },
         {
           id: '3',
-          customerName: 'Robert Davis',
+          customerName: 'Daniyal Ali',
           amount: 2000,
           date: '2024-10-20',
           dueDate: '2024-10-30',

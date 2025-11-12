@@ -38,9 +38,9 @@ export default function LoginPage() {
 
   const fillDemoCredentials = (role: 'admin' | 'staff' | 'visitor') => {
     const credentials = {
-      admin: { email: 'admin@example.com', password: 'admin123' },
-      staff: { email: 'staff@example.com', password: 'staff123' },
-      visitor: { email: 'visitor@example.com', password: 'visitor123' },
+      admin: { email: 'admin@gmail.com', password: 'admin123' },
+      staff: { email: 'staff@gmail.com', password: 'staff123' },
+      visitor: { email: 'visitor@gmail.com', password: 'visitor123' },
     };
     setEmail(credentials[role].email);
     setPassword(credentials[role].password);
@@ -63,7 +63,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder="abdullah@gmail.com"
                 required
                 className="w-full"
               />

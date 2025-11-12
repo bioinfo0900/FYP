@@ -148,6 +148,9 @@ export const MaintenanceProvider = ({ children }: { children: ReactNode }) => {
   }, [tasks]);
 
   useEffect(() => {
+    // Run check on mount and every minute. checkOverdueTasks uses a functional updater
+    // so it does not need `tasks` in the dependency array and will avoid causing
+    // re-renders when nothing actually changed.
     const interval = setInterval(() => {
       checkOverdueTasks();
     }, 60000);
@@ -155,23 +158,27 @@ export const MaintenanceProvider = ({ children }: { children: ReactNode }) => {
     checkOverdueTasks();
 
     return () => clearInterval(interval);
-  }, [tasks]);
+  }, []);
 
   const checkOverdueTasks = () => {
     const now = new Date();
     const today = now.toISOString().split('T')[0];
 
-    setTasks((prev) =>
-      prev.map((task) => {
+    // Use functional updater and only update state if at least one task changes.
+    setTasks((prev) => {
+      let changed = false;
+      const updated = prev.map((task) => {
         if (
           (task.status === 'scheduled' || task.status === 'in_progress') &&
           task.deadline < today
         ) {
+          changed = true;
           return { ...task, status: 'overdue', updatedAt: new Date() };
         }
         return task;
-      })
-    );
+      });
+      return changed ? updated : prev;
+    });
   };
 
   const addTask = (task: Omit<MaintenanceTask, 'id' | 'createdAt' | 'updatedAt'>) => {

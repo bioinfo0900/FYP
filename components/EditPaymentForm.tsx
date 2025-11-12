@@ -149,7 +149,7 @@ export default function EditPaymentForm({ payment, onClose, onSuccess }: EditPay
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="plot_booking">Plot Booking</SelectItem>
+                  <SelectItem value="grave_booking">Grave Booking</SelectItem>
                   <SelectItem value="burial_service">Burial Service</SelectItem>
                   <SelectItem value="maintenance">Maintenance</SelectItem>
                   <SelectItem value="other">Other</SelectItem>

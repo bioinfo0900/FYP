@@ -23,7 +23,7 @@ export default function PaymentForm({ onClose, onSuccess }: PaymentFormProps) {
   const [dueDate, setDueDate] = useState('');
   const [plotId, setPlotId] = useState('');
   const [graveId, setGraveId] = useState('');
-  const [serviceType, setServiceType] = useState<ServiceType>('plot_booking');
+  const [serviceType, setServiceType] = useState<ServiceType>('grave_booking');
   const [status, setStatus] = useState<PaymentStatus>('pending');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
@@ -162,7 +162,7 @@ export default function PaymentForm({ onClose, onSuccess }: PaymentFormProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="plot_booking">Plot Booking</SelectItem>
+                  <SelectItem value="grave_booking">Grave Booking</SelectItem>
                   <SelectItem value="burial_service">Burial Service</SelectItem>
                   <SelectItem value="maintenance">Maintenance</SelectItem>
                   <SelectItem value="other">Other</SelectItem>

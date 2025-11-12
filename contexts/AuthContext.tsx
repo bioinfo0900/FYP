@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     {
       id: '1',
       username: 'admin',
-      email: 'admin@example.com',
+      email: 'admin@gmail.com',
       password: 'admin123',
       role: 'admin',
       createdAt: new Date(),
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     {
       id: '2',
       username: 'staff',
-      email: 'staff@example.com',
+      email: 'staff@gmail.com',
       password: 'staff123',
       role: 'staff',
       createdAt: new Date(),
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     {
       id: '3',
       username: 'visitor',
-      email: 'visitor@example.com',
+      email: 'visitor@gmail.com',
       password: 'visitor123',
       role: 'visitor',
       createdAt: new Date(),
