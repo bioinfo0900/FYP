@@ -5,22 +5,23 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Graveyard } from '@/contexts/GraveyardContext';
 
 interface GraveyardFormProps {
-  graveyard?: Graveyard;
-  onSubmit: (data: { name: string; location: string }) => void;
+  graveyard?: any;
+  onSubmit: (data: any) => void;
   onClose: () => void;
 }
 
 export default function GraveyardForm({ graveyard, onSubmit, onClose }: GraveyardFormProps) {
   const [name, setName] = useState(graveyard?.name || '');
   const [location, setLocation] = useState(graveyard?.location || '');
+  const [latitude, setLatitude] = useState(graveyard?.latitude || 33.7298);
+  const [longitude, setLongitude] = useState(graveyard?.longitude || 73.1785);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim() && location.trim()) {
-      onSubmit({ name, location });
+      onSubmit({ name, location, latitude, longitude });
     }
   };
 
@@ -60,6 +61,29 @@ export default function GraveyardForm({ graveyard, onSubmit, onClose }: Graveyar
               placeholder="Enter location address"
               required
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-2">
+              <Label htmlFor="lat">Latitude</Label>
+              <Input
+                id="lat"
+                type="number"
+                step="0.000001"
+                value={latitude}
+                onChange={(e) => setLatitude(parseFloat(e.target.value))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lng">Longitude</Label>
+              <Input
+                id="lng"
+                type="number"
+                step="0.000001"
+                value={longitude}
+                onChange={(e) => setLongitude(parseFloat(e.target.value))}
+              />
+            </div>
           </div>
 
           <div className="flex gap-3 pt-4">
